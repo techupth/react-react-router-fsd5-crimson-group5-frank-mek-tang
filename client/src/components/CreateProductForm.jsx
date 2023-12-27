@@ -1,4 +1,35 @@
+import axios from "axios";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 function CreateProductForm() {
+  const [name, setName] = useState("");
+  const [image, setImage] = useState("");
+  const [price, setPrice] = useState("");
+  const [description, setDescription] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    addNewProduct();
+  };
+
+  const addNewProduct = async () => {
+    try {
+      await axios.post("http://localhost:4001/products", {
+        name,
+        image,
+        price,
+        description,
+      });
+      console.log("Product created successfully!");
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <form className="product-form">
       <h1>Create Product Form</h1>
@@ -10,7 +41,7 @@ function CreateProductForm() {
             name="name"
             type="text"
             placeholder="Enter name here"
-            onChange={() => {}}
+            onChange={(event) => setName(event.target.value)}
           />
         </label>
       </div>
@@ -22,7 +53,7 @@ function CreateProductForm() {
             name="image"
             type="text"
             placeholder="Enter image url here"
-            onChange={() => {}}
+            onChange={(event) => setImage(event.target.value)}
           />
         </label>
       </div>
@@ -34,7 +65,7 @@ function CreateProductForm() {
             name="price"
             type="number"
             placeholder="Enter price here"
-            onChange={() => {}}
+            onChange={(event) => setPrice(event.target.value)}
           />
         </label>
       </div>
@@ -46,14 +77,16 @@ function CreateProductForm() {
             name="description"
             type="text"
             placeholder="Enter description here"
-            onChange={() => {}}
+            onChange={(event) => setDescription(event.target.value)}
             rows={4}
             cols={30}
           />
         </label>
       </div>
       <div className="form-actions">
-        <button type="submit">Create</button>
+        <button type="submit" onClick={handleSubmit}>
+          Create
+        </button>
       </div>
     </form>
   );
